@@ -1,94 +1,122 @@
-# Benchmarking Model 1: Protein Sequence-Ligand Binding Prediction
 
-This project benchmarks deep learning models (ESM-2 based) across multiple protein-ligand datasets. It includes preprocessing, embedding generation, model training, evaluation, and results tracking.
+# CLAPE-SMB: Transformer-Based Protein Sequence–Ligand Binding Site Prediction
 
---------------------------------------------------------------------------------
+This repository contains the codebase for **CLAPE-SMB**, a deep learning model built on top of ESM-2 protein language models for predicting ligand binding sites from protein sequences. It was developed as part of a Master's thesis in computational biology and machine learning.
 
-Project Structure:
+CLAPE-SMB uses triplet loss–based training for fine-grained residue-level supervision, and is benchmarked on the UniProtSMB and BioLiP datasets.
 
-benchmarking_model1/
-├── Dataset/               # All cleaned & formatted .pkl datasets
-│   ├── UniProtSMB/
-│   ├── ProteinNet/
-│   ├── FLIP/
-│   └── BindingDB/
-│
-├── Results/
-│   ├── logs/              # TensorBoard logs
-│   │   ├── ProteinNet/
-│   │   └── FLIP/
-│   └── metrics/           # Evaluation metrics (.csv)
-│
-├── Models/                # Final trained model checkpoints
-│   ├── saved_model_FLIP.ckpt
-│   └── saved_model_ProteinNet.ckpt
-│
-├── scripts/               # Training and preprocessing scripts
-│   ├── generate_embeddings_flip.py
-│   ├── triplet_flip.py
-│   └── preprocessing/
-│       ├── preprocess_doublesub.py
-│       ├── preprocess_doublesub_fixed.py
-│       └── split_flip_doublesub.py
-│
-├── utils/                 # Utility modules
-│   ├── data.py
-│   ├── model.py
-│   ├── losses.py
-│   ├── inference.py
-│   ├── count.py
-│   └── pre.py
-│
-├── triplet_classification/ # Legacy & ProteinNet triplet model scripts
-│   ├── triplet.py
-│   ├── triplet_optimized.py
-│   └── updated_triplet_model_v2.py
-│
-├── environment.yml        # Conda environment file
+---
+
+## Project Structure
+
+clape-smb/
+├── Dataset/ # (excluded) Placeholder for UniProtSMB and BioLiP
+├── evaluate/ # Evaluation scripts and TensorBoard logs
+│ └── tensorboard_logs/
+├── scripts/ # Embedding generation and preprocessing
+│ └── generate_all_embeddings_distributed.py
+├── utils/ # Model, loss functions, inference utilities
+│ ├── model.py
+│ ├── losses.py
+│ ├── inference.py
+│ └── ...
+├── Results/ # Metrics and model checkpoints (not tracked by Git)
+├── triplet_main.py # Main training script
+├── environment.yml # Conda environment file
 └── README.md
 
---------------------------------------------------------------------------------
 
-Features:
-- Preprocessing pipelines for FLIP and ProteinNet datasets
-- Embedding generation using facebook/esm2_t33_650M_UR50D
-- Triplet loss–based training for representation learning
-- Evaluation metrics and TensorBoard support
-- Model checkpoint saving and result logging
+---
 
---------------------------------------------------------------------------------
+## Features
 
-How to Run:
+- Embedding generation using ESM2 (facebook/esm2_t33_650M_UR50D)
+- Transformer-based sequence model with triplet loss training
+- Residue-level prediction and evaluation (Precision, Recall, F1, AUROC)
+- Evaluation logging with TensorBoard
+- Modular structure for training, evaluation, and inference
 
-1. Set up the environment:
-   conda env create -f environment.yml
-   conda activate benchmarking
+---
 
-2. Preprocess a dataset:
-   python scripts/preprocessing/preprocess_doublesub.py
+## Environment Setup
 
-3. Generate embeddings:
-   python utils/generate_all_embeddings.py --dataset FLIP
+```bash
+conda env create -f environment.yml
+conda activate clape_smb
 
-4. Train a model:
-   python scripts/triplet_flip.py
+How to Run
+Note: Dataset contents are excluded from version control. See Dataset/README_dataset_structure.md for details.
 
-5. Evaluate:
-   python scripts/evaluate_all.py --dataset FLIP
+1) Generate ESM-2 embeddings:
 
---------------------------------------------------------------------------------
+python scripts/generate_all_embeddings_distributed.py UniProtSMB
 
-Results:
+2) Train the model:
 
-Final evaluation metrics are stored in Results/metrics/
-TensorBoard logs are stored in Results/logs/
+python triplet_main.py
 
---------------------------------------------------------------------------------
+3) Run evaluation:
 
-Acknowledgments:
+python evaluate/evaluate_model.py
 
-This project uses the facebook/esm pretrained transformer models for protein sequence representation:
-https://github.com/facebookresearch/esm
+4) Launch TensorBoard to view logs:
+
+tensorboard --logdir evaluate/tensorboard_logs/
+
+
+Dataset Format
+The following subdirectories must exist under Dataset/:
+
+BioLiP/: Contains processed structural binding site labels and metadata
+
+UniProtSMB/: Contains protein sequences and precomputed embeddings
+
+Refer to Dataset/README_dataset_structure.md for expected formats and file structures.
+
+Results
+Evaluation metrics are stored in Results/metrics/
+
+Model checkpoints are stored in Results/logs/**/checkpoints/
+
+Inference outputs and training logs are available under evaluate/tensorboard_logs/
+
+Acknowledgments
+This project makes use of:
+
+ESM (facebookresearch/esm)
+
+BioLiP for structural binding site annotations
+
+Development was supported as part of a graduate thesis in the Department of Computer Science at Oklahoma State University.
+
+
+---
+
+## Citation
+
+If you use this codebase or derive from the CLAPE-SMB architecture, please cite the following work, which inspired the training methodology and benchmarking strategy:
+
+Wang, Jue, Liu, Yufan, and Tian, Boxue.  
+**Protein-small molecule binding site prediction based on a pre-trained protein language model with contrastive learning**.  
+*Journal of Cheminformatics*, 16(1), 125 (2024).  
+[https://doi.org/10.1186/s13321-024-00920-2](https://doi.org/10.1186/s13321-024-00920-2)
+
+BibTeX:
+```bibtex
+@article{10.1186/s13321-024-00920-2,
+    author = {Wang, Jue and Liu, Yufan and Tian, Boxue},
+    title = {Protein-small molecule binding site prediction based on a pre-trained protein language model with contrastive learning},
+    journal = {Journal of Cheminformatics},
+    year = {2024},
+    month = {Nov},
+    day = {06},
+    volume = {16},
+    number = {1},
+    pages = {125},
+    issn = {1758-2946},
+    doi = {10.1186/s13321-024-00920-2},
+    url = {https://doi.org/10.1186/s13321-024-00920-2}
+}
 
 --------------------------------------------------------------------------------
 
