@@ -6,25 +6,25 @@ This repository contains the codebase for **CLAPE-SMB**, a deep learning model b
 CLAPE-SMB uses triplet loss–based training for fine-grained residue-level supervision, and is benchmarked on the UniProtSMB and BioLiP datasets.
 
 ---
-
 ## Project Structure
 
+```text
 clape-smb/
-├── Dataset/ # (excluded) Placeholder for UniProtSMB and BioLiP
-├── evaluate/ # Evaluation scripts and TensorBoard logs
-│ └── tensorboard_logs/
-├── scripts/ # Embedding generation and preprocessing
-│ └── generate_all_embeddings_distributed.py
-├── utils/ # Model, loss functions, inference utilities
-│ ├── model.py
-│ ├── losses.py
-│ ├── inference.py
-│ └── ...
-├── Results/ # Metrics and model checkpoints (not tracked by Git)
-├── triplet_main.py # Main training script
-├── environment.yml # Conda environment file
+├── Dataset/                    # (excluded) Placeholder for UniProtSMB and BioLiP
+├── evaluate/                   # Evaluation scripts and TensorBoard logs
+│   └── tensorboard_logs/
+├── scripts/                    # Embedding generation and preprocessing
+│   └── generate_all_embeddings_distributed.py
+├── utils/                      # Model, loss functions, inference utilities
+│   ├── model.py
+│   ├── losses.py
+│   ├── inference.py
+│   └── ...
+├── Results/                    # Metrics and model checkpoints (not tracked by Git)
+├── triplet_main.py             # Main training script
+├── environment.yml             # Conda environment file
 └── README.md
-
+```
 
 ---
 
@@ -44,27 +44,28 @@ clape-smb/
 conda env create -f environment.yml
 conda activate clape_smb
 
+```
 How to Run
 Note: Dataset contents are excluded from version control. See Dataset/README_dataset_structure.md for details.
 
 1) Generate ESM-2 embeddings:
-
+```
 python scripts/generate_all_embeddings_distributed.py UniProtSMB
-
+```
 2) Train the model:
-
+```
 python triplet_main.py
-
+```
 3) Run evaluation:
-
+```
 python evaluate/evaluate_model.py
-
+```
 4) Launch TensorBoard to view logs:
-
+```
 tensorboard --logdir evaluate/tensorboard_logs/
+```
 
-
-Dataset Format
+## Dataset Format
 The following subdirectories must exist under Dataset/:
 
 BioLiP/: Contains processed structural binding site labels and metadata
@@ -73,50 +74,53 @@ UniProtSMB/: Contains protein sequences and precomputed embeddings
 
 Refer to Dataset/README_dataset_structure.md for expected formats and file structures.
 
-Results
+## Results
 Evaluation metrics are stored in Results/metrics/
 
 Model checkpoints are stored in Results/logs/**/checkpoints/
 
 Inference outputs and training logs are available under evaluate/tensorboard_logs/
 
-Acknowledgments
-This project makes use of:
-
-ESM (facebookresearch/esm)
-
-BioLiP for structural binding site annotations
-
-Development was supported as part of a graduate thesis in the Department of Computer Science at Oklahoma State University.
-
-
 ---
 
 ## Citation
 
-If you use this codebase or derive from the CLAPE-SMB architecture, please cite the following work, which inspired the training methodology and benchmarking strategy:
+If you use this repository or derive from the CLAPE-SMB model, please cite the following works:
+
+**CLAPE-SMB (2025)**  
+Transformer-based protein sequence–ligand binding site prediction model.  
+Developed as part of a Master's thesis at Oklahoma State University.
+
+### Benchmarking Methodology
 
 Wang, Jue, Liu, Yufan, and Tian, Boxue.  
-**Protein-small molecule binding site prediction based on a pre-trained protein language model with contrastive learning**.  
+**Protein-small molecule binding site prediction based on a pre-trained protein language model with contrastive learning.**  
 *Journal of Cheminformatics*, 16(1), 125 (2024).  
 [https://doi.org/10.1186/s13321-024-00920-2](https://doi.org/10.1186/s13321-024-00920-2)
 
-BibTeX:
-```bibtex
-@article{10.1186/s13321-024-00920-2,
-    author = {Wang, Jue and Liu, Yufan and Tian, Boxue},
-    title = {Protein-small molecule binding site prediction based on a pre-trained protein language model with contrastive learning},
-    journal = {Journal of Cheminformatics},
-    year = {2024},
-    month = {Nov},
-    day = {06},
-    volume = {16},
-    number = {1},
-    pages = {125},
-    issn = {1758-2946},
-    doi = {10.1186/s13321-024-00920-2},
-    url = {https://doi.org/10.1186/s13321-024-00920-2}
-}
+### ESM-2 Protein Language Model
+
+Lin, Zeming, Akin, Halil, Rao, Roshan, Hie, Brian, Zhu, Zhongkai, Lu, Wenting, Smetanin, Nikita, dos Santos Costa, Allan, Fazel-Zarandi, Maryam, Sercu, Tom, Candido, Sal, *et al.*  
+**Language models of protein sequences at the scale of evolution enable accurate structure prediction.**  
+*bioRxiv* (2022).  
+[https://doi.org/10.1101/2022.07.20.500902](https://doi.org/10.1101/2022.07.20.500902)
+
+### BioLiP Structural Binding Annotations
+
+Yang J, Roy A, Zhang Y.  
+**BioLiP: a semi-manually curated database for biologically relevant ligand-protein interactions.**  
+*Nucleic Acids Research*, 41(Database issue): D1096–D1103 (2013).  
+[https://doi.org/10.1093/nar/gks966](https://doi.org/10.1093/nar/gks966)
+
+---
+
+## Acknowledgments
+
+- **CLAPE-SMB** builds on pretrained protein embeddings from [facebookresearch/esm](https://github.com/facebookresearch/esm) (ESM-2).
+- Binding site annotations are curated from the [BioLiP database](https://zhanggroup.org/BioLiP/).
+- This work was conducted in the Department of Computer Science at Oklahoma State University as part of a Master's thesis in computational biology and machine learning.
+
+
 
 --------------------------------------------------------------------------------
 
