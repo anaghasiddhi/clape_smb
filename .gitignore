@@ -1,0 +1,25 @@
+# === Large Results and Artifacts ===
+*.pt
+*.ckpt
+*.csv
+*.out
+*.log
+*.tfevents.*
+
+# === Checkpoints & Lightning Logs ===
+lightning_logs/
+runs/
+tensorboard_logs/
+
+# === Dataset (excluded due to size) ===
+Dataset/
+ARCHIVE_logs_misc/
+backup/
+
+# === System/Editor Files ===
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+.env
+.venv
+*.swp
